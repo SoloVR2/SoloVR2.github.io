@@ -1,1 +1,361 @@
-# SoloVR2.github.io
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Soloz AI Loader</title>
+  <meta name="theme-color" content="#6c63ff" />
+  <style>
+    :root{
+      --bg:#0b0b12;
+      --panel:#11111a;
+      --glow:#7a78ff;
+      --accent:#6c63ff;
+      --accent2:#00d1ff;
+      --text:#e9e9ff;
+      --muted:#9aa0b4;
+      --ok:#2ee6a6;
+      --warn:#ffce3a;
+      --err:#ff5f7a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; background:radial-gradient(1200px 800px at 70% -10%, #1a1a2f 0%, var(--bg) 55%) fixed;
+      color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      overflow-x:hidden;
+    }
+
+    /* ---------- Global ornaments ---------- */
+    .grid-overlay{
+      position:fixed; inset:0; pointer-events:none; opacity:.08;
+      background:
+        linear-gradient(transparent 23px, rgba(255,255,255,.06) 24px),
+        linear-gradient(90deg, transparent 23px, rgba(255,255,255,.06) 24px);
+      background-size:24px 24px;
+      mask-image: radial-gradient(70% 70% at 50% 30%, black 60%, transparent 100%);
+    }
+
+    /* ---------- Header / Hero ---------- */
+    header{
+      position:relative; min-height:100vh; display:grid; place-items:center; overflow:hidden;
+    }
+    /* animated gradient wash */
+    .wash{
+      position:absolute; inset:-20% -10%;
+      background:conic-gradient(from 180deg at 50% 50%, #0f1024, #181a3d, #0e1b26, #0f1024);
+      filter: blur(60px) saturate(1.4);
+      animation: wash 18s linear infinite;
+      opacity:.55;
+    }
+    @keyframes wash{to{transform:rotate(1turn)}}
+
+    /* canvas rain behind content */
+    #rain{
+      position:absolute; inset:0; z-index:0; opacity:.45;
+    }
+
+    .hero{
+      position:relative; z-index:1; text-align:center; padding:96px 20px 64px;
+      width:min(1100px, 92vw);
+    }
+    .badge{
+      display:inline-flex; gap:.5rem; align-items:center;
+      padding:6px 12px; border-radius:999px; font-size:.85rem; letter-spacing:.2px;
+      background:linear-gradient(90deg, rgba(124,118,255,.16), rgba(0,209,255,.16));
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(6px);
+      color:var(--muted);
+    }
+    .title{
+      margin:18px 0 8px; font-weight:800; line-height:1.05;
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      text-shadow:0 0 22px rgba(108,99,255,.35);
+    }
+    .glitch{
+      position:relative; display:inline-block;
+    }
+    .glitch::before,.glitch::after{
+      content:attr(data-text);
+      position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+      clip-path: inset(0 0 0 0);
+    }
+    .glitch::before{ transform:translate(1px,0); color:#7a78ff; animation:gl1 2.2s infinite steps(2,end); opacity:.9}
+    .glitch::after{ transform:translate(-1px,0); color:#00e1ff; animation:gl2 1.8s infinite steps(2,end); opacity:.8}
+    @keyframes gl1{ 10%{clip-path: inset(0 0 70% 0)} 20%{clip-path: inset(40% 0 0 0)} 30%{clip-path: inset(0 0 20% 0)} 40%{clip-path: inset(70% 0 0 0)} 60%{clip-path: inset(0 0 0 0)} }
+    @keyframes gl2{ 15%{clip-path: inset(60% 0 0 0)} 25%{clip-path: inset(0 0 35% 0)} 45%{clip-path: inset(10% 0 0 0)} 70%{clip-path: inset(0 0 0 0)} }
+
+    .subtitle{
+      margin:8px auto 22px; color:var(--muted);
+      font-size: clamp(1rem, 2.6vw, 1.2rem);
+      max-width: 800px;
+    }
+
+    /* typewriter line */
+    .typewrap{
+      display:flex; justify-content:center; gap:.5ch; margin:8px 0 28px; color:#cfd4ff;
+      font-weight:600; letter-spacing:.3px;
+    }
+    .type{
+      border-right:2px solid var(--accent2);
+      white-space:nowrap; overflow:hidden;
+    }
+    .ctaRow{
+      display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px;
+    }
+    .btn{
+      padding:12px 18px; border-radius:14px; border:1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(124,118,255,.18), rgba(124,118,255,.06));
+      color:var(--text); text-decoration:none; font-weight:700; letter-spacing:.3px;
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 6px 20px rgba(124,118,255,.18);
+      cursor:pointer;
+    }
+    .btn:hover{ transform: translateY(-2px); box-shadow:0 12px 28px rgba(0,209,255,.18)}
+    .btn.primary{ background: linear-gradient(90deg, var(--accent), var(--accent2)); border-color:transparent; color:#0d0f1a }
+
+    .scrollHint{
+      margin-top:34px; display:inline-flex; flex-direction:column; align-items:center; gap:8px; opacity:.8;
+      color:#cdd1ff; text-decoration:none; font-size:.95rem;
+    }
+    .chev{
+      width:20px; height:28px; border:2px solid rgba(255,255,255,.35); border-radius:12px; position:relative;
+    }
+    .chev::after{
+      content:""; position:absolute; left:50%; top:6px; width:6px; height:6px;
+      border-right:2px solid rgba(255,255,255,.6); border-bottom:2px solid rgba(255,255,255,.6);
+      transform: translateX(-50%) rotate(45deg); animation: bounce 1.4s infinite ease-in-out;
+    }
+    @keyframes bounce{ 0%,100%{transform:translate(-50%,2px) rotate(45deg)} 50%{transform:translate(-50%,10px) rotate(45deg)} }
+
+    /* ---------- Sections ---------- */
+    section{
+      position:relative; padding:96px 20px; display:flex; align-items:center; justify-content:center;
+    }
+    .wrap{ width:min(1100px, 92vw); }
+    .section-title{
+      font-size: clamp(1.6rem, 3.6vw, 2.4rem); margin:0 0 14px; font-weight:800;
+      text-shadow:0 0 20px rgba(108,99,255,.25);
+    }
+    .muted{ color:var(--muted) }
+
+    .cards{
+      display:grid; grid-template-columns: repeat( auto-fit, minmax(240px,1fr) ); gap:16px; margin-top:20px;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04);
+      transform: translateY(8px); opacity:0; transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s ease;
+    }
+    .card.show{ transform: translateY(0); opacity:1 }
+    .card h3{ margin:6px 0 6px; font-size:1.05rem }
+    .chip{ font-size:.75rem; color:#a9b0cc; border:1px solid rgba(255,255,255,.12); padding:3px 8px; border-radius:999px }
+
+    /* ---------- Download block ---------- */
+    .download{
+      text-align:center; padding:120px 20px 140px;
+      background: radial-gradient(600px 300px at 50% -10%, rgba(108,99,255,.18), transparent 60%);
+    }
+    .soon{
+      display:inline-flex; align-items:center; gap:10px; margin-top:10px; color:#cfd4ff;
+    }
+
+    /* ---------- Toast ---------- */
+    .toast{
+      position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px);
+      background:rgba(17,17,26,.78); backdrop-filter: blur(8px);
+      color:#fff; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35); opacity:0; transition: .25s ease; z-index:10;
+    }
+    .toast.show{ opacity:1; transform:translateX(-50%) translateY(0) }
+
+    /* ---------- Footer ---------- */
+    footer{
+      padding:28px 20px 48px; text-align:center; color:#8f94b2; font-size:.9rem
+    }
+
+    /* ---------- Parallax bits ---------- */
+    .orb{
+      position:absolute; border-radius:50%; filter: blur(12px); opacity:.5; pointer-events:none;
+      background: radial-gradient(circle at 35% 35%, rgba(124,118,255,.9), rgba(124,118,255,.05) 60%);
+      width:240px; height:240px; top:15%; left:-80px;
+      animation: float 9s ease-in-out infinite alternate;
+    }
+    .orb.b{ left:auto; right:-60px; top:55%; width:180px; height:180px; animation-duration: 12s; background: radial-gradient(circle at 60% 40%, rgba(0,209,255,.9), rgba(0,209,255,.05) 60%);}
+    @keyframes float{ to{ transform: translateY(18px) } }
+
+    /* ---------- Responsive tweaks ---------- */
+    @media (max-width:520px){
+      .ctaRow{gap:10px}
+      .btn{width:100%}
+      .subtitle{font-size:1rem}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="rain" aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header id="top">
+    <div class="wash" aria-hidden="true"></div>
+    <span class="orb" aria-hidden="true"></span>
+    <span class="orb b" aria-hidden="true"></span>
+
+    <div class="hero">
+      <span class="badge">⚡ Private Build • Safe desktop overlay</span>
+      <h1 class="title">
+        <span class="glitch" data-text="Soloz AI Loader">Soloz AI Loader</span>
+      </h1>
+      <p class="subtitle">Smooth ESP visuals, sticky-lock tracking, and a silky UI shell built for performance.</p>
+
+      <div class="typewrap"><span class="muted">Scroll down —</span>
+        <span class="type" id="type">the best Roblox AI</span>
+      </div>
+
+      <div class="ctaRow">
+        <a class="btn primary" href="#features">Explore Features</a>
+        <a class="btn" href="#download">Download</a>
+      </div>
+
+      <a class="scrollHint" href="#features" aria-label="Scroll down">
+        <div class="chev"></div>
+        <small>Scroll</small>
+      </a>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="wrap">
+      <h2 class="section-title">Why it feels different</h2>
+      <p class="muted">Neon visuals, ultra-low latency loops, and a loader that just… behaves. Fully client-side UI, no inject.</p>
+
+      <div class="cards">
+        <article class="card"><span class="chip">ESP / FOV</span><h3>Clean overlay</h3><p class="muted">Crisp boxes, center-locked FOV circle, buttery motion with adaptive smoothing.</p></article>
+        <article class="card"><span class="chip">Performance</span><h3>120+ FPS loop</h3><p class="muted">Optimized capture and render path designed to stay snappy under load.</p></article>
+        <article class="card"><span class="chip">Input</span><h3>Multi-path aim</h3><p class="muted">Windows SendInput by default. Arduino HID optional for hardware routing.</p></article>
+        <article class="card"><span class="chip">Safety</span><h3>Non-inject overlay</h3><p class="muted">Desktop layer with transparent click-through and toggles. Private distribution.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <h2 class="section-title">Built for creators like Solo</h2>
+      <p class="muted">A modern stack with themed UI, state saving, and extension hooks. Bring your own models, configs, and binds.</p>
+    </div>
+  </section>
+
+  <section id="download" class="download">
+    <div class="wrap">
+      <h2 class="section-title">Download</h2>
+      <p class="muted">We’re polishing the build. Hit download and you’ll see what’s up.</p>
+      <div class="ctaRow">
+        <button class="btn primary" id="dlBtn">Download Soloz AI Loader</button>
+        <a class="btn" href="#top">Back to top</a>
+      </div>
+      <div class="soon">🔒 Status: <strong>Soon..</strong></div>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Soloz • “Build smarter. Aim sharper. Hack cleaner.”
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Soon..</div>
+
+  <script>
+    // ----- Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ----- Typewriter (looping phrases)
+    const phrases = ["the best Roblox AI","center-locked FOV","butter-smooth tracking","private non-inject overlay"];
+    const el = document.getElementById('type');
+    let pi=0, ci=0, deleting=false, hold=0;
+    function typeLoop(){
+      const p = phrases[pi % phrases.length];
+      if(!deleting){
+        el.textContent = p.slice(0, ++ci);
+        if(ci === p.length){ deleting = true; hold = 14; }
+      } else {
+        if(hold>0){ hold--; }
+        else{
+          el.textContent = p.slice(0, --ci);
+          if(ci===0){ deleting=false; pi++; }
+        }
+      }
+      setTimeout(typeLoop, deleting?48:36);
+    }
+    typeLoop();
+
+    // ----- On-scroll reveal for cards
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show') })
+    },{ threshold:.2 });
+    document.querySelectorAll('.card').forEach(c=>io.observe(c));
+
+    // ----- Toast for Download
+    const toast = document.getElementById('toast');
+    document.getElementById('dlBtn').addEventListener('click', ()=>{
+      toast.textContent = "Soon..";
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 1500);
+    });
+
+    // ----- Parallax orbs
+    const orbs = document.querySelectorAll('.orb');
+    window.addEventListener('scroll', ()=>{
+      const y = window.scrollY;
+      orbs.forEach((o,i)=>{
+        o.style.transform = `translateY(${y * (i?0.06:0.03)}px)`;
+      });
+    });
+
+    // ----- Canvas RAIN (neon drizzle)
+    const c = document.getElementById('rain');
+    const ctx = c.getContext('2d');
+    let W,H, drops=[];
+    function size(){
+      W = c.width  = window.innerWidth;
+      H = c.height = window.innerHeight;
+      drops = new Array(Math.floor(W/6)).fill(0).map(()=>spawn());
+    }
+    function rand(a,b){ return Math.random()*(b-a)+a }
+    function spawn(){
+      return {
+        x: rand(0,W),
+        y: rand(-H,0),
+        len: rand(8,22),
+        spd: rand(2.6,5.4),
+        w: rand(1,2),
+        hue: rand(220,260)
+      }
+    }
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      for(let d of drops){
+        // trail
+        const grad = ctx.createLinearGradient(d.x, d.y, d.x, d.y+d.len);
+        grad.addColorStop(0, `hsla(${d.hue},100%,70%,.0)`);
+        grad.addColorStop(.8, `hsla(${d.hue},100%,70%,.55)`);
+        grad.addColorStop(1, `hsla(${d.hue},100%,70%,0)`);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = d.w;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x, d.y + d.len);
+        ctx.stroke();
+
+        d.y += d.spd;
+        d.x += Math.sin(d.y * .02) * .2;
+        if(d.y > H + 20) Object.assign(d, spawn(), { y: -10, x: rand(0,W) });
+      }
+      requestAnimationFrame(tick);
+    }
+    window.addEventListener('resize', size);
+    size(); tick();
+  </script>
+</body>
+</html>
