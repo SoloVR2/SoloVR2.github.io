@@ -2,13 +2,11 @@
 Solo AI Aim — License & Terms (v1.1)
 Copyright (c) 2025 Solo
 
-
 License (Personal Use Only)
 - Free to download and use personally.
 - No resale, repackaging, redistribution, or rebranding allowed.
 - No reverse engineering of builds or activation systems.
 - Provided “as is” with no warranty, uptime, or compatibility guarantees.
-
 
 Terms of Service
 - This is a personal project, not affiliated with Roblox or any publisher.
@@ -119,9 +117,29 @@ Terms of Service
     @keyframes float{ to{ transform: translateY(18px) } }
 
     @media (max-width:560px){ .nav .hideSm{display:none} .btn{width:100%} .subtitle{font-size:1rem} }
+
+    /* Floating Sound Control */
+    .sound-toggle{
+      position:fixed; right:16px; bottom:16px; z-index:6;
+      display:flex; align-items:center; gap:10px;
+      background:rgba(17,17,26,.7); border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(6px);
+      padding:10px 12px; border-radius:14px; box-shadow:0 10px 28px rgba(0,0,0,.35);
+      user-select:none;
+    }
+    .sound-toggle button{
+      border:0; border-radius:10px; padding:8px 10px; cursor:pointer; font-weight:700;
+      background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#0b0f18;
+    }
+    .sound-toggle span{ color:#cfd4ff; font-size:.9rem }
   </style>
 </head>
 <body>
+  <!-- Hidden audio element: use RAW GitHub URL (not the blob page) -->
+  <audio id="rainAudio"
+         src="https://raw.githubusercontent.com/SoloVR2/SoloVR2.github.io/main/rain.mp3"
+         loop preload="auto" crossorigin="anonymous"></audio>
+
   <!-- Top Nav -->
   <nav class="nav">
     <span class="brand">Soloz</span>
@@ -246,6 +264,13 @@ Terms of Service
     © <span id="year"></span> Soloz • Build smarter. Aim sharper. Hack cleaner.
   </footer>
 
+  <!-- Floating Sound controls -->
+  <div class="sound-toggle" id="soundPanel" aria-live="polite">
+    <span id="soundState">Rain: OFF</span>
+    <button id="soundStart" type="button">Start</button>
+    <button id="soundStop" type="button">Stop</button>
+  </div>
+
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -310,9 +335,31 @@ Terms of Service
 
       requestAnimationFrame(step);
     }
-
     addEventListener('resize', size); size(); step();
+
+    // ======== AUDIO: Start / Stop using your GitHub MP3 ========
+    const audio = document.getElementById('rainAudio');
+    const btnStart = document.getElementById('soundStart');
+    const btnStop  = document.getElementById('soundStop');
+    const stateLbl = document.getElementById('soundState');
+
+    // Set a comfy default volume; browsers require user gesture to start audio.
+    audio.volume = 0.35;
+
+    btnStart.addEventListener('click', async () => {
+      try {
+        await audio.play();
+        stateLbl.textContent = 'Rain: ON';
+      } catch (e) {
+        console.log('Audio blocked until user interacts:', e);
+      }
+    });
+
+    btnStop.addEventListener('click', () => {
+      audio.pause();
+      audio.currentTime = 0; // rewind to start
+      stateLbl.textContent = 'Rain: OFF';
+    });
   </script>
 </body>
 </html>
-
