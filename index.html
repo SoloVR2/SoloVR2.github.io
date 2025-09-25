@@ -1,3 +1,21 @@
+<!--
+Solo AI Aim — License & Terms (v1.1)
+Copyright (c) 2025 Solo
+
+
+License (Personal Use Only)
+- Free to download and use personally.
+- No resale, repackaging, redistribution, or rebranding allowed.
+- No reverse engineering of builds or activation systems.
+- Provided “as is” with no warranty, uptime, or compatibility guarantees.
+
+
+Terms of Service
+- This is a personal project, not affiliated with Roblox or any publisher.
+- Respect platform rules and laws when using it.
+- Access may be revoked if you abuse, impersonate, or attempt to bypass.
+- By using this site or builds, you agree to these terms.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,108 +25,126 @@
   <meta name="theme-color" content="#6c63ff" />
   <style>
     :root{
-      --bg:#0b0b12; --panel:#11111a; --accent:#6c63ff; --accent2:#00d1ff;
-      --text:#e9e9ff; --muted:#9aa0b4;
+      --bg:#0b0b12; --panel:#0f1118; --panel2:#121425; --stroke:#1b1e33;
+      --accent:#6c63ff; --accent2:#00d1ff; --text:#e9e9ff; --muted:#a3a9bf;
     }
     *{box-sizing:border-box}
-    html,body{height:100%} html{scroll-behavior:smooth}
-    body{margin:0; background:radial-gradient(1200px 800px at 70% -10%, #1a1a2f 0%, var(--bg) 55%) fixed;
-         color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans";
-         overflow-x:hidden;}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; background:radial-gradient(1200px 800px at 70% -20%, #1a1a2f 0%, var(--bg) 55%) fixed;
+      color:var(--text); font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans";
+      overflow-x:hidden;
+    }
+
+    /* Top Nav */
+    .nav{
+      position:fixed; top:0; left:0; right:0; z-index:10;
+      display:flex; align-items:center; gap:14px; padding:10px 14px;
+      background:rgba(10,12,22,.55); border-bottom:1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(8px);
+    }
+    .nav .brand{font-weight:800; letter-spacing:.2px}
+    .nav .badge{color:#cfe3ff; font-weight:600; font-size:.85rem; padding:4px 8px; border-radius:999px;
+      background:linear-gradient(90deg, rgba(124,118,255,.16), rgba(0,209,255,.16)); border:1px solid rgba(255,255,255,.14)}
+    .nav a{color:#cfd4ff; text-decoration:none; padding:8px 10px; border-radius:10px}
+    .nav a:hover{background:rgba(255,255,255,.06)}
+    .spacer{flex:1}
+    .nav .dl{background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#0c0f18; font-weight:800}
+
+    /* Background Grid */
     .grid-overlay{position:fixed; inset:0; pointer-events:none; opacity:.08;
       background:linear-gradient(transparent 23px, rgba(255,255,255,.06) 24px),
                  linear-gradient(90deg, transparent 23px, rgba(255,255,255,.06) 24px);
-      background-size:24px 24px; mask-image: radial-gradient(70% 70% at 50% 30%, black 60%, transparent 100%);}
-    header{position:relative; min-height:100vh; display:grid; place-items:center; overflow:hidden;}
-    .wash{position:absolute; inset:-20% -10%; background:conic-gradient(from 180deg at 50% 50%, #0f1024, #181a3d, #0e1b26, #0f1024);
-      filter: blur(60px) saturate(1.4); animation: wash 18s linear infinite; opacity:.55;}
+      background-size:24px 24px; mask-image: radial-gradient(75% 70% at 50% 25%, black 60%, transparent 100%);
+    }
+
+    /* Hero */
+    header{position:relative; min-height:100vh; display:grid; place-items:center; overflow:hidden}
+    .wash{position:absolute; inset:-20% -10%; background:conic-gradient(from 180deg at 50% 50%, #0f1024, #191b3f, #0e1b26, #0f1024);
+      filter: blur(60px) saturate(1.4); animation: wash 18s linear infinite; opacity:.55}
     @keyframes wash{to{transform:rotate(1turn)}}
 
-    /* RAIN CANVAS */
+    /* Rain Canvas (no audio) */
     #rain{position:fixed; inset:0; z-index:0; opacity:.9; pointer-events:none}
 
-    .hero{position:relative; z-index:1; text-align:center; padding:96px 20px 64px; width:min(1100px, 92vw);}
-    .badge{display:inline-flex; gap:.5rem; align-items:center; padding:6px 12px; border-radius:999px; font-size:.85rem; letter-spacing:.2px;
-      background:linear-gradient(90deg, rgba(124,118,255,.16), rgba(0,209,255,.16));
-      border:1px solid rgba(255,255,255,.16); backdrop-filter: blur(6px); color:var(--muted);}
-    .title{margin:18px 0 8px; font-weight:800; line-height:1.05; font-size: clamp(2.2rem, 6vw, 5rem); text-shadow:0 0 22px rgba(108,99,255,.35);}
-    .glitch{ position:relative; display:inline-block }
-    .glitch::before,.glitch::after{content:attr(data-text); position:absolute; inset:0; mix-blend-mode:screen; clip-path: inset(0 0 0 0); pointer-events:none;}
-    .glitch::before{ transform:translate(1px,0); color:#7a78ff; animation:gl1 2.2s infinite steps(2,end); opacity:.9}
-    .glitch::after{ transform:translate(-1px,0); color:#00e1ff; animation:gl2 1.8s infinite steps(2,end); opacity:.85}
-    @keyframes gl1{10%{clip-path: inset(0 0 70% 0)}20%{clip-path: inset(40% 0 0 0)}30%{clip-path: inset(0 0 20% 0)}40%{clip-path: inset(70% 0 0 0)}60%{clip-path: inset(0 0 0 0)}}
-    @keyframes gl2{15%{clip-path: inset(60% 0 0 0)}25%{clip-path: inset(0 0 35% 0)}45%{clip-path: inset(10% 0 0 0)}70%{clip-path: inset(0 0 0 0)}}
-    .subtitle{margin:8px auto 22px; color:var(--muted); font-size: clamp(1rem, 2.6vw, 1.2rem); max-width: 800px;}
-    .typewrap{display:flex; justify-content:center; gap:.5ch; margin:8px 0 28px; color:#cfd4ff; font-weight:600; letter-spacing:.3px;}
+    .hero{position:relative; z-index:1; text-align:center; padding:120px 20px 64px; width:min(1100px, 92vw)}
+    .title{margin:18px 0 8px; font-weight:900; line-height:1.04; font-size: clamp(2.3rem, 6.2vw, 5.2rem); text-shadow:0 0 22px rgba(108,99,255,.35)}
+    .badge{display:inline-flex; gap:.55rem; align-items:center; padding:6px 12px; border-radius:999px; font-size:.9rem; letter-spacing:.2px;
+      background:linear-gradient(90deg, rgba(124,118,255,.16), rgba(0,209,255,.16)); border:1px solid rgba(255,255,255,.16); color:#cfe3ff}
+    .subtitle{margin:10px auto 22px; color:var(--muted); font-size: clamp(1rem, 2.6vw, 1.15rem); max-width: 860px}
+    .typewrap{display:flex; justify-content:center; gap:.5ch; margin:8px 0 28px; color:#cfd4ff; font-weight:700; letter-spacing:.3px}
     .type{border-right:2px solid var(--accent2); white-space:nowrap; overflow:hidden}
-    .ctaRow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px;}
-    .btn{padding:12px 18px; border-radius:14px; border:1px solid rgba(255,255,255,.16);
+
+    .ctaRow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+    .btn{padding:12px 18px; border-radius:14px; border:1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(124,118,255,.18), rgba(124,118,255,.06)); color:var(--text);
-      text-decoration:none; font-weight:700; letter-spacing:.3px; transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
-      box-shadow: 0 6px 20px rgba(124,118,255,.18); cursor:pointer;}
+      text-decoration:none; font-weight:800; letter-spacing:.3px; transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 6px 20px rgba(124,118,255,.18); cursor:pointer}
     .btn:hover{ transform: translateY(-2px); box-shadow:0 12px 28px rgba(0,209,255,.18)}
     .btn.primary{ background: linear-gradient(90deg, var(--accent), var(--accent2)); border-color:transparent; color:#0d0f1a }
-    .scrollHint{margin-top:34px; display:inline-flex; flex-direction:column; align-items:center; gap:8px; opacity:.8; color:#cdd1ff; text-decoration:none; font-size:.95rem;}
-    .chev{width:20px; height:28px; border:2px solid rgba(255,255,255,.35); border-radius:12px; position:relative;}
-    .chev::after{content:""; position:absolute; left:50%; top:6px; width:6px; height:6px; border-right:2px solid rgba(255,255,255,.6);
-      border-bottom:2px solid rgba(255,255,255,.6); transform: translateX(-50%) rotate(45deg); animation: bounce 1.4s infinite ease-in-out;}
+
+    .scrollHint{margin-top:34px; display:inline-flex; flex-direction:column; align-items:center; gap:8px; opacity:.85; color:#cdd1ff; text-decoration:none; font-size:.95rem}
+    .chev{width:20px; height:28px; border:2px solid rgba(255,255,255,.35); border-radius:12px; position:relative}
+    .chev::after{content:""; position:absolute; left:50%; top:6px; width:6px; height:6px; border-right:2px solid rgba(255,255,255,.6); border-bottom:2px solid rgba(255,255,255,.6);
+      transform: translateX(-50%) rotate(45deg); animation: bounce 1.4s infinite ease-in-out}
     @keyframes bounce{0%,100%{transform:translate(-50%,2px) rotate(45deg)}50%{transform:translate(-50%,10px) rotate(45deg)}}
+
     section{position:relative; padding:96px 20px; display:flex; align-items:center; justify-content:center}
     .wrap{ width:min(1100px, 92vw) }
-    .section-title{font-size: clamp(1.6rem, 3.6vw, 2.4rem); margin:0 0 14px; font-weight:800; text-shadow:0 0 20px rgba(108,99,255,.25);}
+    .section-title{font-size: clamp(1.6rem, 3.6vw, 2.4rem); margin:0 0 14px; font-weight:900; text-shadow:0 0 20px rgba(108,99,255,.25)}
     .muted{ color:var(--muted) }
-    .cards{display:grid; grid-template-columns: repeat( auto-fit, minmax(240px,1fr) ); gap:16px; margin-top:20px;}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.12);
-      border-radius:18px; padding:18px; box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04);
-      transform: translateY(8px); opacity:0; transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s ease;}
+
+    .cards{display:grid; grid-template-columns: repeat( auto-fit, minmax(240px,1fr) ); gap:16px; margin-top:20px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04); transform: translateY(8px); opacity:0;
+      transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s ease}
     .card.show{ transform: translateY(0); opacity:1 }
     .card h3{ margin:6px 0 6px; font-size:1.05rem }
     .chip{ font-size:.75rem; color:#a9b0cc; border:1px solid rgba(255,255,255,.12); padding:3px 8px; border-radius:999px }
-    .download{text-align:center; padding:120px 20px 140px; background: radial-gradient(600px 300px at 50% -10%, rgba(108,99,255,.18), transparent 60%);}
+
+    .download{text-align:center; padding:120px 20px 140px; background: radial-gradient(600px 300px at 50% -10%, rgba(108,99,255,.18), transparent 60%)}
+
     .legal{padding:80px 20px; background:linear-gradient(0deg, rgba(255,255,255,.03), transparent 60%)}
-    .legal-box{background:rgba(17,17,26,.55); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:18px; backdrop-filter:blur(8px)}
+    .legal-box{background:rgba(18,20,37,.65); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:18px; backdrop-filter:blur(8px)}
     .legal h3{ margin:0 0 8px } .legal p{ color:#cfd2ea; margin:6px 0 } .legal ul{ color:#cfd2ea; padding-left:18px; margin:8px 0 } .legal li{ margin:6px 0 }
+
     footer{ padding:28px 20px 48px; text-align:center; color:#8f94b2; font-size:.9rem }
 
-    /* Floating Sound Control */
-    .sound-toggle{ position:fixed; right:16px; bottom:16px; z-index:5; display:flex; align-items:center; gap:10px;
-      background:rgba(17,17,26,.7); border:1px solid rgba(255,255,255,.14); backdrop-filter: blur(6px);
-      padding:10px 12px; border-radius:14px; box-shadow:0 10px 28px rgba(0,0,0,.35);}
-    .sound-toggle button{ border:0; border-radius:10px; padding:8px 10px; cursor:pointer; font-weight:700;
-      background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#0b0f18;}
-    .sound-toggle span{ color:#cfd4ff; font-size:.9rem }
-    .sound-toggle input[type="range"]{ width:120px; accent-color: var(--accent2); }
-
     /* Orbs */
-    .orb{ position:absolute; border-radius:50%; filter: blur(12px); opacity:.5; pointer-events:none;
+    .orb{position:absolute; border-radius:50%; filter: blur(12px); opacity:.5; pointer-events:none;
       background: radial-gradient(circle at 35% 35%, rgba(124,118,255,.9), rgba(124,118,255,.05) 60%);
-      width:240px; height:240px; top:15%; left:-80px; animation: float 9s ease-in-out infinite alternate; }
-    .orb.b{ left:auto; right:-60px; top:55%; width:180px; height:180px; animation-duration: 12s;
-      background: radial-gradient(circle at 60% 40%, rgba(0,209,255,.9), rgba(0,209,255,.05) 60%)}
+      width:240px; height:240px; top:15%; left:-80px; animation: float 9s ease-in-out infinite alternate}
+    .orb.b{ left:auto; right:-60px; top:55%; width:180px; height:180px; animation-duration: 12s; background: radial-gradient(circle at 60% 40%, rgba(0,209,255,.9), rgba(0,209,255,.05) 60%)}
     @keyframes float{ to{ transform: translateY(18px) } }
 
-    @media (max-width:520px){
-      .ctaRow{gap:10px} .btn{width:100%} .subtitle{font-size:1rem}
-      .sound-toggle{ right:10px; bottom:10px; } .sound-toggle input[type="range"]{ width:90px; }
-    }
+    @media (max-width:560px){ .nav .hideSm{display:none} .btn{width:100%} .subtitle{font-size:1rem} }
   </style>
 </head>
 <body>
-  <!-- Hidden YouTube player container -->
-  <div id="ytRain" style="position:fixed; width:0; height:0; overflow:hidden; z-index:-1;"></div>
+  <!-- Top Nav -->
+  <nav class="nav">
+    <span class="brand">Soloz</span>
+    <span class="badge hideSm">Free Build</span>
+    <a href="#features">Features</a>
+    <a href="#about">About</a>
+    <a href="#download">Download</a>
+    <div class="spacer"></div>
+    <a class="dl" href="https://www.mediafire.com/file/k0eej1ll11qt3lv/Loader2.exe/file" target="_blank" rel="noopener">Get Loader</a>
+  </nav>
 
-  <!-- Rain canvas -->
+  <!-- Background helpers -->
   <canvas id="rain" aria-hidden="true"></canvas>
   <div class="grid-overlay" aria-hidden="true"></div>
 
+  <!-- HERO -->
   <header id="top">
     <div class="wash" aria-hidden="true"></div>
     <span class="orb" aria-hidden="true"></span>
     <span class="orb b" aria-hidden="true"></span>
-
     <div class="hero">
       <span class="badge">⚡ Free Build • The safest AI aim program ever</span>
-      <h1 class="title"><span class="glitch" data-text="Soloz AI Loader">Soloz AI Loader</span></h1>
+      <h1 class="title">Soloz AI Loader</h1>
       <p class="subtitle">Dialed aim. Clean visuals. Lightweight by design.</p>
 
       <div class="typewrap"><span class="muted">Scroll down —</span>
@@ -121,24 +157,25 @@
       </div>
 
       <a class="scrollHint" href="#features" aria-label="Scroll down">
-        <div class="chev"></div><small>Scroll</small>
+        <div class="chev"></div>
+        <small>Scroll</small>
       </a>
     </div>
   </header>
 
-  <!-- Reminder -->
+  <!-- Reminder note -->
   <section id="notice" style="width:100%;display:flex;justify-content:center;padding:18px 14px;background:linear-gradient(0deg, rgba(255,255,255,.03), transparent);">
-    <div style="width:min(1100px,92vw);background:rgba(17,17,26,.55);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;backdrop-filter:blur(6px);">
+    <div style="width:min(1100px,92vw);background:rgba(18,20,37,.60);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;backdrop-filter:blur(6px)">
       <strong style="opacity:.9">Reminder:</strong>
       <span id="noticeText">Make the FOV smaller if the AI starts locking on anything that isn’t the player.</span>
     </div>
   </section>
 
+  <!-- FEATURES -->
   <section id="features">
     <div class="wrap">
       <h2 class="section-title">Why people stick with it</h2>
       <p class="muted">No noise. No gimmicks. It just feels right.</p>
-
       <div class="cards">
         <article class="card"><span class="chip">Visuals</span><h3>Looks clean</h3><p class="muted">Readable, polished, and out of your way when it matters.</p></article>
         <article class="card"><span class="chip">Performance</span><h3>Stays smooth</h3><p class="muted">Built light so your frames stay steady and input stays crisp.</p></article>
@@ -148,26 +185,41 @@
     </div>
   </section>
 
+  <!-- ABOUT -->
   <section id="about">
     <div class="wrap">
-      <h2 class="section-title">Made by Solo</h2>
-      <p class="muted">Built to be reliable day after day. Updates land when they’re ready, not when they’re noisy.</p>
+      <h2 class="section-title">About Me</h2>
+      <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:18px">
+        <div style="background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px;">
+          <h3 style="margin:4px 0 8px">Hey, I’m Soloz</h3>
+          <p class="muted" style="margin-top:6px">I like coding and building tools that feel good to use. I’ve seen people ship “AI cheats” that are either packed with junk or priced like a meme for mid results. So I decided to make my own — clean, lightweight, and free.</p>
+          <p class="muted" style="margin-top:6px">If you vibe with that, enjoy the build. I’ll keep improving it as I go.</p>
+        </div>
+        <div style="background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px;">
+          <h3 style="margin:4px 0 8px">Quick facts</h3>
+          <ul class="muted" style="margin:8px 0 0 18px">
+            <li>Free build — no paywall, no upsell.</li>
+            <li>UI first — clean visuals, no fluff.</li>
+            <li>Updates when ready — quality over noise.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
+  <!-- DOWNLOAD -->
   <section id="download" class="download">
     <div class="wrap">
       <h2 class="section-title">Download</h2>
       <p class="muted">Public, free release hosted on MediaFire.</p>
       <div class="ctaRow">
-        <a class="btn primary" href="https://www.mediafire.com/file/k0eej1ll11qt3lv/Loader2.exe/file" target="_blank" rel="noopener noreferrer">
-          Download Soloz AI Loader
-        </a>
+        <a class="btn primary" href="https://www.mediafire.com/file/k0eej1ll11qt3lv/Loader2.exe/file" target="_blank" rel="noopener">Download Soloz AI Loader</a>
         <a class="btn" href="#legal">Terms & License</a>
       </div>
     </div>
   </section>
 
+  <!-- LEGAL -->
   <section id="legal" class="legal">
     <div class="wrap">
       <div class="legal-box">
@@ -177,15 +229,15 @@
           <li>Free to download and use.</li>
           <li>Don’t sell it, don’t repackage it, and don’t slap your name on it.</li>
           <li>Private builds and any activation bits stay private.</li>
-          <li>No promises: it’s provided “as is” — no warranty, no guaranteed uptime or compatibility.</li>
+          <li>It’s provided “as is” — no warranty, no guaranteed uptime or compatibility.</li>
         </ul>
         <h3>What this project is / isn’t</h3>
         <ul>
           <li>This is a personal project. It’s not affiliated with Roblox or any publisher.</li>
-          <li>Use your head and follow the rules where you play.</li>
-          <li>If you try to spoof, abuse, or bypass guardrails, your access can be limited or cut.</li>
+          <li>Use your head and follow platform rules and local laws.</li>
+          <li>If you spoof, abuse, or bypass guardrails, access can be limited or cut.</li>
         </ul>
-        <p class="muted">By downloading or using the build, you agree to the terms above. If that doesn’t work for you, don’t use it.</p>
+        <p class="muted">By using the site or build, you agree to the terms above.</p>
       </div>
     </div>
   </section>
@@ -194,110 +246,72 @@
     © <span id="year"></span> Soloz • Build smarter. Aim sharper. Hack cleaner.
   </footer>
 
-  <!-- Sound control -->
-  <div class="sound-toggle" id="soundPanel" aria-live="polite">
-    <span id="soundState">Rain: OFF</span>
-    <input id="soundVol" type="range" min="0" max="100" value="35" title="Volume">
-    <button id="soundBtn" type="button">Turn ON</button>
-  </div>
-
-  <!-- Scripts -->
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Typewriter
-    const phrases = ["goated asf","the best Roblox AI","ridiculous consistency","built to win"];
-    const el = document.getElementById('type'); let pi=0, ci=0, deleting=false, hold=0;
+    // Typewriter (short, non-technical)
+    const phrases = ["goated asf","the best Roblox AI","ridiculous consistency","built to win"]; const el = document.getElementById('type');
+    let pi=0, ci=0, deleting=false, hold=0;
     (function typeLoop(){ const p = phrases[pi % phrases.length];
       if(!deleting){ el.textContent = p.slice(0, ++ci); if(ci === p.length){ deleting = true; hold = 14; } }
       else{ if(hold>0){ hold--; } else { el.textContent = p.slice(0, --ci); if(ci===0){ deleting=false; pi++; } } }
       setTimeout(typeLoop, deleting?48:36);
     })();
 
-    // Reveal on scroll
-    const io = new IntersectionObserver((es)=>{es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show') })},{ threshold:.2 });
+    // Reveal cards on scroll
+    const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show') }) },{ threshold:.22 });
     document.querySelectorAll('.card').forEach(c=>io.observe(c));
 
     // Orbs parallax
     const orbs = document.querySelectorAll('.orb');
     window.addEventListener('scroll', ()=>{ const y = window.scrollY; orbs.forEach((o,i)=>{ o.style.transform = `translateY(${y * (i?0.06:0.03)}px)`; }); });
 
-    // ========= RAIN VISUALS (brighter + splashes) =========
+    // ======== RAIN (visual only, layered, brighter, with splashes) ========
     const canvas = document.getElementById('rain'); const ctx = canvas.getContext('2d');
-    let W,H, drops=[], splashes=[]; let wind=0.25, windDrift=0;
-    function size(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight;
-      const count = Math.max(240, Math.floor(W * 0.35)); drops = new Array(count).fill(0).map(()=>spawnDrop()); splashes=[]; }
-    function r(a,b){ return Math.random()*(b-a)+a }
-    function spawnDrop(){ return { x:r(-50,W+50), y:r(-H,0), len:r(14,32), w:r(1.4,2.6), spd:r(6.0,11.0), hue:r(210,260), alpha:r(0.55,0.9) } }
-    function spawnSplash(x,y){ splashes.push({x,y,r:r(2,5), life:1, vr:r(0.8,1.6)}); }
-    function tick(){ ctx.clearRect(0,0,W,H); windDrift+=0.0025; const windNow = wind + Math.sin(windDrift)*0.15;
-      for(let d of drops){
-        const grad = ctx.createLinearGradient(d.x, d.y, d.x + windNow*8, d.y + d.len);
-        grad.addColorStop(0, `hsla(${d.hue},100%,70%,0)`); grad.addColorStop(0.25, `hsla(${d.hue},100%,70%,${(d.alpha*0.55).toFixed(2)})`);
-        grad.addColorStop(1, `hsla(${d.hue},100%,70%,0)`); ctx.strokeStyle=grad; ctx.lineWidth=d.w;
-        ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(d.x+windNow*10,d.y+d.len); ctx.stroke();
-        d.y+=d.spd; d.x+=windNow*0.9; if(d.y>H-6){ spawnSplash(d.x,H-6); Object.assign(d, spawnDrop(), {y:r(-60,-10), x:r(-30,W+30)}); }
-      }
+    let W,H; let dropsFront=[], dropsBack=[], splashes=[]; let t=0;
+
+    function R(a,b){ return Math.random()*(b-a)+a }
+    function size(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; seed(); }
+    function seed(){
+      const countBack = Math.max(160, Math.floor(W * 0.20));
+      const countFront = Math.max(260, Math.floor(W * 0.36));
+      dropsBack = new Array(countBack).fill(0).map(()=>spawnDrop(true));
+      dropsFront = new Array(countFront).fill(0).map(()=>spawnDrop(false));
+      splashes = [];
+    }
+    function spawnDrop(soft){
+      return { x:R(-50,W+50), y:R(-H,0), len:R(soft?10:16, soft?24:34), w:R(soft?0.8:1.6, soft?1.2:2.6), spd:R(soft?4.5:7.5, soft?8.0:12.5), soft, hue:R(210,260), a:R(soft?0.28:0.55, soft?0.45:0.9) };
+    }
+    function splash(x,y){ splashes.push({x, y, r:R(2,5), life:1, vr:R(0.8,1.6)}); }
+
+    function drawDrop(d,wind){
+      const grad = ctx.createLinearGradient(d.x, d.y, d.x + wind*8, d.y + d.len);
+      grad.addColorStop(0, `hsla(${d.hue},100%,70%,0)`);
+      grad.addColorStop(0.28, `hsla(${d.hue},100%,70%,${(d.a*0.7).toFixed(2)})`);
+      grad.addColorStop(1, `hsla(${d.hue},100%,70%,0)`);
+      ctx.strokeStyle = grad; ctx.lineWidth = d.w;
+      ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x+wind*10, d.y+d.len); ctx.stroke();
+    }
+
+    function step(){
+      t += 0.0026; // breeze
+      ctx.clearRect(0,0,W,H);
+      const wind = 0.22 + Math.sin(t)*0.14;
+
+      // back layer (softer)
+      for(const d of dropsBack){ drawDrop(d, wind*0.7); d.y+=d.spd*0.85; d.x+=wind*0.6; if(d.y>H-10){ if(!d.soft) splash(d.x, H-6); Object.assign(d, spawnDrop(true), {y:R(-60,-10), x:R(-30,W+30)}); } }
+      // front layer (crisper)
+      for(const d of dropsFront){ drawDrop(d, wind); d.y+=d.spd; d.x+=wind*0.9; if(d.y>H-8){ splash(d.x, H-6); Object.assign(d, spawnDrop(false), {y:R(-60,-10), x:R(-30,W+30)}); } }
+
+      // splashes
       for(let i=splashes.length-1;i>=0;i--){ const s=splashes[i]; ctx.beginPath(); ctx.strokeStyle=`rgba(180,210,255,${s.life.toFixed(2)})`; ctx.lineWidth=1;
-        ctx.arc(s.x,s.y,s.r,Math.PI*0.1,Math.PI*0.9); ctx.stroke(); s.r+=s.vr; s.life-=0.04; if(s.life<=0) splashes.splice(i,1); }
-      requestAnimationFrame(tick);
-    }
-    addEventListener('resize', size); size(); tick();
+        ctx.arc(s.x, s.y, s.r, Math.PI*0.1, Math.PI*0.9); ctx.stroke(); s.r+=s.vr; s.life-=0.04; if(s.life<=0) splashes.splice(i,1); }
 
-    // ========= YOUTUBE RAIN SOUND =========
-    const btn = document.getElementById('soundBtn');
-    const state = document.getElementById('soundState');
-    const vol = document.getElementById('soundVol');
-    let ytPlayer;
-
-    // IFrame API callback
-    function onYouTubeIframeAPIReady(){
-      ytPlayer = new YT.Player('ytRain', {
-        height:'0', width:'0',
-        videoId:'yIQd2Ya0Ziw', // your rain video
-        playerVars:{
-          autoplay:0, controls:0, rel:0, modestbranding:1, playsinline:1,
-          loop:1, playlist:'yIQd2Ya0Ziw', // loop same video
-          origin: window.location.origin
-        },
-        events:{ onReady: onYTReady }
-      });
-    }
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-
-    function onYTReady(){
-      // init volume (0–100)
-      ytPlayer.setVolume(parseInt(vol.value));
-      setState(false);
+      requestAnimationFrame(step);
     }
 
-    function setState(playing){
-      if(playing){ state.textContent='Rain: ON'; btn.textContent='Turn OFF'; }
-      else { state.textContent='Rain: OFF'; btn.textContent='Turn ON'; }
-    }
-
-    function toggleAudio(){
-      if(!ytPlayer) return;
-      const st = ytPlayer.getPlayerState();
-      if(st !== YT.PlayerState.PLAYING){
-        ytPlayer.playVideo();
-        setState(true);
-      }else{
-        ytPlayer.pauseVideo();
-        setState(false);
-      }
-    }
-
-    btn.addEventListener('click', toggleAudio);
-    vol.addEventListener('input', ()=>{ if(ytPlayer) ytPlayer.setVolume(parseInt(vol.value)); });
-
-    // Load the YT IFrame API script
-    (function loadYT(){
-      const s=document.createElement('script'); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s);
-    })();
-
+    addEventListener('resize', size); size(); step();
   </script>
 </body>
 </html>
