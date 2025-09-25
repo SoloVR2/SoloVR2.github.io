@@ -25,7 +25,6 @@ Terms of Service (Summary)
     :root{
       --bg:#0b0b12;
       --panel:#11111a;
-      --glow:#7a78ff;
       --accent:#6c63ff;
       --accent2:#00d1ff;
       --text:#e9e9ff;
@@ -61,7 +60,8 @@ Terms of Service (Summary)
     }
     @keyframes wash{to{transform:rotate(1turn)}}
 
-    #rain{position:absolute; inset:0; z-index:0; opacity:.45}
+    /* RAIN CANVAS is behind content */
+    #rain{position:fixed; inset:0; z-index:0; opacity:.9; pointer-events:none}
 
     .hero{
       position:relative; z-index:1; text-align:center; padding:96px 20px 64px;
@@ -83,8 +83,7 @@ Terms of Service (Summary)
     .glitch{ position:relative; display:inline-block }
     .glitch::before,.glitch::after{
       content:attr(data-text);
-      position:absolute; inset:0; mix-blend-mode:screen;
-      clip-path: inset(0 0 0 0);
+      position:absolute; inset:0; mix-blend-mode:screen; clip-path: inset(0 0 0 0);
       pointer-events:none;
     }
     .glitch::before{ transform:translate(1px,0); color:#7a78ff; animation:gl1 2.2s infinite steps(2,end); opacity:.9}
@@ -171,6 +170,24 @@ Terms of Service (Summary)
 
     footer{ padding:28px 20px 48px; text-align:center; color:#8f94b2; font-size:.9rem }
 
+    /* Floating Sound Control */
+    .sound-toggle{
+      position:fixed; right:16px; bottom:16px; z-index:5;
+      display:flex; align-items:center; gap:10px;
+      background:rgba(17,17,26,.7); border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(6px);
+      padding:10px 12px; border-radius:14px; box-shadow:0 10px 28px rgba(0,0,0,.35);
+    }
+    .sound-toggle button{
+      border:0; border-radius:10px; padding:8px 10px; cursor:pointer;
+      font-weight:700; background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#0b0f18;
+    }
+    .sound-toggle span{ color:#cfd4ff; font-size:.9rem }
+    .sound-toggle input[type="range"]{
+      width:120px; accent-color: var(--accent2);
+    }
+
+    /* Orbs */
     .orb{
       position:absolute; border-radius:50%; filter: blur(12px); opacity:.5; pointer-events:none;
       background: radial-gradient(circle at 35% 35%, rgba(124,118,255,.9), rgba(124,118,255,.05) 60%);
@@ -184,10 +201,16 @@ Terms of Service (Summary)
       .ctaRow{gap:10px}
       .btn{width:100%}
       .subtitle{font-size:1rem}
+      .sound-toggle{ right:10px; bottom:10px; }
+      .sound-toggle input[type="range"]{ width:90px; }
     }
   </style>
 </head>
 <body>
+  <!-- Rain audio (upload assets/rain.mp3) -->
+  <audio id="rainAudio" src="assets/rain.mp3" loop preload="auto"></audio>
+
+  <!-- Rain canvas -->
   <canvas id="rain" aria-hidden="true"></canvas>
   <div class="grid-overlay" aria-hidden="true"></div>
 
@@ -218,6 +241,14 @@ Terms of Service (Summary)
       </a>
     </div>
   </header>
+
+  <!-- Reminder (edit text inline whenever) -->
+  <section id="notice" style="width:100%;display:flex;justify-content:center;padding:18px 14px;background:linear-gradient(0deg, rgba(255,255,255,.03), transparent);">
+    <div style="width:min(1100px,92vw);background:rgba(17,17,26,.55);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;backdrop-filter:blur(6px);">
+      <strong style="opacity:.9">Reminder:</strong>
+      <span id="noticeText">Make the FOV smaller if the AI starts locking on anything that isn’t the player.</span>
+    </div>
+  </section>
 
   <section id="features">
     <div class="wrap">
@@ -263,8 +294,7 @@ Terms of Service (Summary)
       <div class="ctaRow">
         <a class="btn primary"
            href="https://www.mediafire.com/file/k0eej1ll11qt3lv/Loader2.exe/file"
-           target="_blank"
-           rel="noopener noreferrer">
+           target="_blank" rel="noopener noreferrer">
           Download Soloz AI Loader
         </a>
         <a class="btn" href="#legal">Terms & License</a>
@@ -276,22 +306,23 @@ Terms of Service (Summary)
     <div class="wrap">
       <div class="legal-box">
         <h2 class="section-title">Terms & License</h2>
-        <h3>License (Free Use)</h3>
+
+        <h3>License</h3>
         <ul>
-          <li>Free for anyone to download and use.</li>
-          <li>No resale, repackaging, redistribution, or rebranding.</li>
-          <li>No reverse engineering of private builds or activation systems.</li>
-          <li>Provided “as is”, without warranty or guarantees.</li>
+          <li>Free to download and use.</li>
+          <li>Don’t sell it, don’t repackage it, and don’t slap your name on it.</li>
+          <li>Private builds and any activation bits stay private.</li>
+          <li>No promises: it’s provided “as is” — no warranty, no guaranteed uptime or compatibility.</li>
         </ul>
 
-        <h3>ToS (Key Points)</h3>
+        <h3>What this project is / isn’t</h3>
         <ul>
-          <li>Access may be limited or revoked for abuse, spoofing, or bypass attempts.</li>
-          <li>Not affiliated with Roblox or any publisher. Know and follow platform rules.</li>
-          <li>No promises on uptime, status, or compatibility across all setups.</li>
+          <li>This is a personal project. It’s not affiliated with Roblox or any publisher.</li>
+          <li>Use your head and follow the rules where you play.</li>
+          <li>If you try to spoof, abuse, or bypass guardrails, your access can be limited or cut.</li>
         </ul>
 
-        <p class="muted">Using this site means you accept these terms. If you don’t agree, don’t use it.</p>
+        <p class="muted">By downloading or using the build, you agree to the terms above. If that doesn’t work for you, don’t use it.</p>
       </div>
     </div>
   </section>
@@ -300,11 +331,18 @@ Terms of Service (Summary)
     © <span id="year"></span> Soloz • Build smarter. Aim sharper. Hack cleaner.
   </footer>
 
+  <!-- Floating sound controls -->
+  <div class="sound-toggle" id="soundPanel" aria-live="polite">
+    <span id="soundState">Rain: OFF</span>
+    <input id="soundVol" type="range" min="0" max="100" value="35" title="Volume">
+    <button id="soundBtn" type="button">Turn ON</button>
+  </div>
+
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Typewriter (no tech leaks)
+    // Typewriter
     const phrases = ["goated asf","the best Roblox AI","ridiculous consistency","built to win"];
     const el = document.getElementById('type');
     let pi=0, ci=0, deleting=false, hold=0;
@@ -329,45 +367,134 @@ Terms of Service (Summary)
     },{ threshold:.2 });
     document.querySelectorAll('.card').forEach(c=>io.observe(c));
 
-    // Parallax orbs
+    // Orbs parallax
     const orbs = document.querySelectorAll('.orb');
     window.addEventListener('scroll', ()=>{
       const y = window.scrollY;
       orbs.forEach((o,i)=>{ o.style.transform = `translateY(${y * (i?0.06:0.03)}px)`; });
     });
 
-    // Canvas rain (visual only)
-    const c = document.getElementById('rain');
-    const ctx = c.getContext('2d');
-    let W,H, drops=[];
+    // ========= RAIN VISUALS =========
+    const canvas = document.getElementById('rain');
+    const ctx = canvas.getContext('2d');
+    let W,H, drops=[], splashes=[];
+    let wind = 0.25;       // slight wind to the right
+    let windDrift = 0;     // oscillation offset
+
     function size(){
-      W = c.width  = window.innerWidth;
-      H = c.height = window.innerHeight;
-      drops = new Array(Math.floor(W/6)).fill(0).map(()=>spawn());
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      // denser rain
+      const count = Math.max(240, Math.floor(W * 0.35));
+      drops = new Array(count).fill(0).map(()=>spawnDrop());
+      splashes = [];
     }
-    function rand(a,b){ return Math.random()*(b-a)+a }
-    function spawn(){ return { x: rand(0,W), y: rand(-H,0), len: rand(8,22), spd: rand(2.6,5.4), w: rand(1,2), hue: rand(220,260) } }
+    function r(a,b){ return Math.random()*(b-a)+a }
+
+    function spawnDrop(){
+      return {
+        x: r(-50, W+50),
+        y: r(-H, 0),
+        len: r(14, 32),
+        w: r(1.4, 2.6),
+        spd: r(6.0, 11.0),
+        hue: r(210, 260),
+        alpha: r(0.55, 0.9)
+      }
+    }
+    function spawnSplash(x, y){
+      splashes.push({
+        x, y, r: r(2, 5), life: 1, vr: r(0.8, 1.6)
+      });
+    }
+
     function tick(){
       ctx.clearRect(0,0,W,H);
-      for(const d of drops){
-        const g = ctx.createLinearGradient(d.x, d.y, d.x, d.y+d.len);
-        g.addColorStop(0, `hsla(${d.hue},100%,70%,.0)`);
-        g.addColorStop(.8, `hsla(${d.hue},100%,70%,.55)`);
-        g.addColorStop(1, `hsla(${d.hue},100%,70%,0)`);
-        ctx.strokeStyle = g;
+
+      // gentle wind oscillation
+      windDrift += 0.0025;
+      const windNow = wind + Math.sin(windDrift) * 0.15;
+
+      // draw drops
+      for(let d of drops){
+        const grad = ctx.createLinearGradient(d.x, d.y, d.x + windNow*8, d.y + d.len);
+        grad.addColorStop(0, `hsla(${d.hue},100%,70%,0)`);
+        grad.addColorStop(0.25, `hsla(${d.hue},100%,70%,${(d.alpha*0.55).toFixed(2)})`);
+        grad.addColorStop(1, `hsla(${d.hue},100%,70%,0)`);
+
+        ctx.strokeStyle = grad;
         ctx.lineWidth = d.w;
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x, d.y + d.len);
+        ctx.lineTo(d.x + windNow*10, d.y + d.len);
         ctx.stroke();
+
+        // update
         d.y += d.spd;
-        d.x += Math.sin(d.y * .02) * .2;
-        if(d.y > H + 20){ Object.assign(d, spawn(), { y: -10, x: rand(0,W) }); }
+        d.x += windNow * 0.9;
+
+        // splash near bottom
+        if(d.y > H - 6){
+          spawnSplash(d.x, H - 6);
+          Object.assign(d, spawnDrop(), { y: r(-60, -10), x: r(-30, W+30) });
+        }
       }
+
+      // draw splashes
+      for(let i=splashes.length-1; i>=0; i--){
+        const s = splashes[i];
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(180,210,255,${s.life.toFixed(2)})`;
+        ctx.lineWidth = 1;
+        ctx.arc(s.x, s.y, s.r, Math.PI*0.1, Math.PI*0.9);
+        ctx.stroke();
+        s.r += s.vr;
+        s.life -= 0.04;
+        if(s.life <= 0) splashes.splice(i,1);
+      }
+
       requestAnimationFrame(tick);
     }
     window.addEventListener('resize', size);
     size(); tick();
+
+    // ========= RAIN SOUND (toggle + volume) =========
+    const audio = document.getElementById('rainAudio');
+    const btn   = document.getElementById('soundBtn');
+    const state = document.getElementById('soundState');
+    const vol   = document.getElementById('soundVol');
+
+    // start muted to satisfy browser autoplay policies
+    audio.volume = vol.value / 100;
+
+    function setState(playing){
+      if(playing){
+        state.textContent = 'Rain: ON';
+        btn.textContent = 'Turn OFF';
+      }else{
+        state.textContent = 'Rain: OFF';
+        btn.textContent = 'Turn ON';
+      }
+    }
+    async function toggleAudio(){
+      if(audio.paused){
+        try{
+          await audio.play();
+          setState(true);
+        }catch(e){
+          // If blocked, require a user gesture; button click counts.
+          console.log('Audio play blocked until user interacts:', e);
+        }
+      }else{
+        audio.pause();
+        setState(false);
+      }
+    }
+    btn.addEventListener('click', toggleAudio);
+    vol.addEventListener('input', ()=>{ audio.volume = vol.value / 100; });
+
+    // First user interaction anywhere can auto-start if they click ON before:
+    document.addEventListener('pointerdown', ()=>{}, {once:true});
   </script>
 </body>
 </html>
