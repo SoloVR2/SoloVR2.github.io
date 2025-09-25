@@ -1,17 +1,17 @@
 <!--
-Solo AI Aim — License & Terms (v1.0)
+Solo AI Aim — License & Terms (v1.1)
 Copyright (c) 2025 Solo
 
-License (Personal Use Only)
-- You may view, download, and use this site and any downloadable builds for your own, non-commercial, personal use.
-- You may not resell, repackage, or redistribute any part of this project, including branding, names, or assets.
-- No reverse engineering of private builds, loader.
-- Use at your own risk. No warranty. No guaranteed uptime, accuracy, or compatibility.
-- free btw for anyone wants to know
+License (Free Use)
+- Free for anyone to download and use.
+- Do not resell, repackage, redistribute, or rebrand.
+- No reverse engineering of private builds, activation systems, or keys.
+- Provided “as is” without warranty, uptime, or compatibility guarantees.
+
 Terms of Service (Summary)
-- Access can be revoked at any time for abuse, impersonation, or attempts to bypass access controls.
-- This project is not affiliated with Roblox or any game/publisher. Respect game rules and regional laws.
-- By using this site, you agree to the above License and Terms.
+- Access can be limited or revoked for abuse, impersonation, or bypass attempts.
+- Not affiliated with Roblox or any publisher. Follow platform rules and local laws.
+- Official builds are always available at: https://solovr2.github.io/#features
 -->
 
 <!DOCTYPE html>
@@ -169,14 +169,6 @@ Terms of Service (Summary)
     .legal ul{ color:#cfd2ea; padding-left:18px; margin:8px 0 }
     .legal li{ margin:6px 0 }
 
-    .toast{
-      position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px);
-      background:rgba(17,17,26,.78); backdrop-filter: blur(8px);
-      color:#fff; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35); opacity:0; transition: .25s ease; z-index:10;
-    }
-    .toast.show{ opacity:1; transform:translateX(-50%) translateY(0) }
-
     footer{ padding:28px 20px 48px; text-align:center; color:#8f94b2; font-size:.9rem }
 
     .orb{
@@ -205,7 +197,7 @@ Terms of Service (Summary)
     <span class="orb b" aria-hidden="true"></span>
 
     <div class="hero">
-      <span class="badge">⚡ Private Build • The safest AI aim program ever</span>
+      <span class="badge">⚡ Free Build • The safest AI aim program ever</span>
       <h1 class="title">
         <span class="glitch" data-text="Soloz AI Loader">Soloz AI Loader</span>
       </h1>
@@ -267,12 +259,16 @@ Terms of Service (Summary)
   <section id="download" class="download">
     <div class="wrap">
       <h2 class="section-title">Download</h2>
-      <p class="muted">Packaging the drop. When it’s ready, it’s ready.</p>
+      <p class="muted">Public, free release hosted on MediaFire.</p>
       <div class="ctaRow">
-        <button class="btn primary" id="dlBtn">Download Soloz AI Loader</button>
+        <a class="btn primary"
+           href="https://www.mediafire.com/file/k0eej1ll11qt3lv/Loader2.exe/file"
+           target="_blank"
+           rel="noopener noreferrer">
+          Download Soloz AI Loader
+        </a>
         <a class="btn" href="#legal">Terms & License</a>
       </div>
-      <div class="muted" style="margin-top:10px">🔒 Status: <strong>Soon..</strong></div>
     </div>
   </section>
 
@@ -280,9 +276,9 @@ Terms of Service (Summary)
     <div class="wrap">
       <div class="legal-box">
         <h2 class="section-title">Terms & License</h2>
-        <h3>License (Personal Use)</h3>
+        <h3>License (Free Use)</h3>
         <ul>
-          <li>For personal, non-commercial use only.</li>
+          <li>Free for anyone to download and use.</li>
           <li>No resale, repackaging, redistribution, or rebranding.</li>
           <li>No reverse engineering of private builds or activation systems.</li>
           <li>Provided “as is”, without warranty or guarantees.</li>
@@ -304,13 +300,11 @@ Terms of Service (Summary)
     © <span id="year"></span> Soloz • Build smarter. Aim sharper. Hack cleaner.
   </footer>
 
-  <div class="toast" id="toast">Soon..</div>
-
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Typewriter phrases (kept hype, zero tech leaks)
+    // Typewriter (no tech leaks)
     const phrases = ["goated asf","the best Roblox AI","ridiculous consistency","built to win"];
     const el = document.getElementById('type');
     let pi=0, ci=0, deleting=false, hold=0;
@@ -334,14 +328,6 @@ Terms of Service (Summary)
       entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show') })
     },{ threshold:.2 });
     document.querySelectorAll('.card').forEach(c=>io.observe(c));
-
-    // Toast
-    const toast = document.getElementById('toast');
-    document.getElementById('dlBtn').addEventListener('click', ()=>{
-      toast.textContent = "Soon..";
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'), 1500);
-    });
 
     // Parallax orbs
     const orbs = document.querySelectorAll('.orb');
