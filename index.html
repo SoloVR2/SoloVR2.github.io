@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Soloz AI Loader</title>
   <meta name="theme-color" content="#6c63ff" />
+  <link rel="preload" href="https://raw.githubusercontent.com/SoloVR2/SoloVR2.github.io/main/rain.mp3" as="audio" crossorigin="anonymous" />
   <style>
     :root{
       --bg:#0b0b12; --panel:#0f1118; --panel2:#121425; --stroke:#1b1e33;
@@ -139,7 +140,7 @@
     <a href="#download">Download</a>
     <a href="#video">Video</a>
     <div class="spacer"></div>
-    <a class="dl" href="https://www.mediafire.com/file/k0eej1ll11qt3lv/Loader2.exe/file" target="_blank" rel="noopener">Get Loader</a>
+    <a class="dl" href="https://www.mediafire.com/file/186df4p878iaq3i/Loader2.exe/file" target="_blank" rel="noopener">Get Loader</a>
   </nav>
 
   <canvas id="rain" aria-hidden="true"></canvas>
@@ -211,6 +212,10 @@
         <a class="btn primary" href="https://www.mediafire.com/file/186df4p878iaq3i/Loader2.exe/file" target="_blank" rel="noopener">Download Soloz AI Loader</a>
         <a class="btn" href="#legal">Terms & License</a>
       </div>
+      <p class="muted" style="margin-top:10px">
+        If the download doesn’t run, install <strong>Python 3.10 or newer</strong> (x64) and try again:
+        <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a>
+      </p>
     </div>
   </section>
 
@@ -251,12 +256,13 @@
   </footer>
 
   <div class="sound-toggle" id="soundPanel" aria-live="polite">
-    <span id="soundState">Rain: ON</span>
-    <button id="soundToggle" type="button">Turn OFF</button>
+    <span id="soundState">Rain: OFF</span>
+    <button id="soundToggle" type="button">Turn ON</button>
   </div>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
     const phrases = ["goated asf","the best Roblox AI","ridiculous consistency","built to win"];
     const el = document.getElementById('type');
     let pi=0, ci=0, deleting=false, hold=0;
@@ -266,15 +272,18 @@
       else{ if(hold>0){ hold--; } else { el.textContent = p.slice(0, --ci); if(ci===0){ deleting=false; pi++; } } }
       setTimeout(typeLoop, deleting?48:36);
     })();
+
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
     },{ threshold:.22 });
     document.querySelectorAll('.card').forEach(c=>io.observe(c));
+
     const orbs = document.querySelectorAll('.orb');
     window.addEventListener('scroll', ()=>{
       const y = window.scrollY;
       orbs.forEach((o,i)=>{ o.style.transform = `translateY(${y * (i?0.06:0.03)}px)`; });
     });
+
     const canvas = document.getElementById('rain'); const ctx = canvas.getContext('2d');
     let W,H; let dropsFront=[], dropsBack=[], splashes=[]; let t=0;
     function R(a,b){ return Math.random()*(b-a)+a; }
@@ -321,6 +330,7 @@
       requestAnimationFrame(step);
     }
     addEventListener('resize', size); size(); step();
+
     const g = document.querySelector('.glitch');
     if(g){
       let tId = null;
@@ -332,10 +342,12 @@
       }
       setInterval(burst, 2200 + Math.random()*1800);
     }
+
     const audio = document.getElementById('rainAudio');
     const soundToggle = document.getElementById('soundToggle');
     const stateLbl = document.getElementById('soundState');
     audio.volume = 0.35;
+
     function setUI(playing){
       stateLbl.textContent = playing ? 'Rain: ON' : 'Rain: OFF';
       soundToggle.textContent = playing ? 'Turn OFF' : 'Turn ON';
@@ -369,6 +381,7 @@
         audio.pause(); setUI(false);
       }
     });
+
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       const k = e.key.toLowerCase();
