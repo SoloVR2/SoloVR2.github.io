@@ -31,7 +31,6 @@
     .nav a{color:#cfd4ff; text-decoration:none; padding:8px 10px; border-radius:10px}
     .nav a:hover{background:rgba(255,255,255,.06)}
     .spacer{flex:1}
-    .nav .dl{background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#0c0f18; font-weight:800}
     .grid-overlay{position:fixed; inset:0; pointer-events:none; opacity:.08;
       background:linear-gradient(transparent 23px, rgba(255,255,255,.06) 24px),
                  linear-gradient(90deg, transparent 23px, rgba(255,255,255,.06) 24px);
@@ -73,6 +72,10 @@
     .card h3{ margin:6px 0 6px; font-size:1.05rem }
     .chip{ font-size:.75rem; color:#a9b0cc; border:1px solid rgba(255,255,255,.12); padding:3px 8px; border-radius:999px }
     .download{text-align:center; padding:120px 20px 140px; background: radial-gradient(600px 300px at 50% -10%, rgba(108,99,255,.18), transparent 60%)}
+    .status-pill{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; font-weight:800;
+      color:#ffe2e2; background:linear-gradient(90deg, rgba(255,80,80,.2), rgba(255,0,80,.18)); border:1px solid rgba(255,120,120,.35)
+    }
     .legal{padding:80px 20px; background:linear-gradient(0deg, rgba(255,255,255,.03), transparent 60%)}
     .legal-box{background:rgba(18,20,37,.65); border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:18px; backdrop-filter:blur(8px)}
     .legal h3{ margin:0 0 8px } .legal p{ color:#cfd2ea; margin:6px 0 } .legal ul{ color:#cfd2ea; padding-left:18px; margin:8px 0 } .legal li{ margin:6px 0 }
@@ -140,7 +143,6 @@
     <a href="#download">Download</a>
     <a href="#video">Video</a>
     <div class="spacer"></div>
-    <a class="dl" href="" target="_blank" rel="noopener">Get Loader</a>
   </nav>
 
   <canvas id="rain" aria-hidden="true"></canvas>
@@ -157,7 +159,6 @@
       <div class="typewrap"><span class="muted">Scroll down —</span><span class="type" id="type">goated asf</span></div>
       <div class="ctaRow">
         <a class="btn primary" href="#features">Explore</a>
-        <a class="btn" href="#download">Download</a>
       </div>
       <a class="scrollHint" href="#features" aria-label="Scroll down"><div class="chev"></div><small>Scroll</small></a>
     </div>
@@ -208,14 +209,12 @@
     <div class="wrap">
       <h2 class="section-title">Download</h2>
       <p class="muted">Public, free release hosted on MediaFire.</p>
-      <div class="ctaRow">
-        <a class="btn primary" href="https://www.mediafire.com/file/186df4p878iaq3i/Loader2.exe/file" target="_blank" rel="noopener">Download Soloz AI Loader</a>
-        <a class="btn" href="#legal">Terms & License</a>
+
+      <div style="margin-top:10px">
+        <span class="status-pill">Status: NOT WORKING</span>
       </div>
-      <p class="muted" style="margin-top:10px">
-        If the download doesn’t run, install <strong>Python 3.10 or newer</strong> (x64) and try again:
-        <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a>
-      </p>
+
+      <p class="muted" style="margin-top:12px">The download is temporarily offline. Check back later.</p>
     </div>
   </section>
 
@@ -410,5 +409,3 @@
   </script>
 </body>
 </html>
-
-
